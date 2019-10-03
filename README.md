@@ -31,3 +31,4 @@ Run the application
 python3 malibu.py
 ```
 First time application running, It will ask for verification code and create a session login file.
+The toggle auto reply feature is default set disable, to enable the auto reply, you need to send message `#toggle` on the saved message.

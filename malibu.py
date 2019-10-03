@@ -12,21 +12,27 @@ phone = os.getenv("TELEGRAM_PHONE_NUMBER")
 session_file = os.getenv("TELEGRAM_USERNAME")
 password = os.getenv("TELEGRAM_PASSWORD")
 
+toggle_auto_reply = False
+
 client = TelegramClient(session_file, api_id, api_hash, sequential_updates=True).start(phone, password)
 
-message = "This is auto-reply. Please wait, I'll check it later."
+message = "This is auto-reply beta feature. I'm currently unavailable. Please wait, I'll check it later."
+
+@client.on(events.NewMessage(pattern='#toggle', forwards=False))
+async def toggle_panel(event):
+    if event.to_id.user_id == event.from_id:
+        global toggle_auto_reply
+        if toggle_auto_reply == False:
+            toggle_auto_reply = True
+        else:
+            toggle_auto_reply = False
+            pass
+        await event.reply(str(toggle_auto_reply))
 
 @client.on(events.NewMessage)
 async def auto_reply(event):
-    if event.is_private:
-        from_ = await event.client.get_entity(event.from_id)
-        if not from_.bot:
-            print(event.message)
-            await event.reply(message)
+    global toggle_auto_reply
+    if event.is_private and toggle_auto_reply:
+        await event.reply(message)
 
-def main():
-    client.run_until_disconnected()
-
-if __name__ == '__main__':
-    print("Auto replying...")
-    main()
+client.run_until_disconnected()
