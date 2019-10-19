@@ -18,6 +18,14 @@ client = TelegramClient(session_file, api_id, api_hash, sequential_updates=True)
 
 message = "This is auto-reply beta feature. I'm currently unavailable. Please wait, I'll check it later."
 
+@client.on(events.NewMessage(pattern='#message', forwards=False))
+async def custom_message(event):
+    if event.to_id.user_id == event.from_id:
+        global message
+        msg = event.message.message.split(" ")
+        message = ' '.join(msg[1:])
+        await event.reply(message)
+
 @client.on(events.NewMessage(pattern='#toggle', forwards=False))
 async def toggle_panel(event):
     if event.to_id.user_id == event.from_id:
