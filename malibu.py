@@ -40,7 +40,7 @@ async def toggle_panel(event):
 @client.on(events.NewMessage)
 async def auto_reply(event):
     global toggle_auto_reply
-    if event.is_private and toggle_auto_reply:
+    if (event.is_private and toggle_auto_reply) and (event.to_id.user_id != event.from_id):
         await event.reply(message)
 
 client.run_until_disconnected()
