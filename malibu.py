@@ -24,7 +24,8 @@ async def custom_message(event):
         global message
         msg = event.message.message.split(" ")
         message = ' '.join(msg[1:])
-        await event.reply(message)
+        await event.message.delete()
+        await event.respond("Message set to : "+message)
 
 @client.on(events.NewMessage(pattern='#toggle', forwards=False))
 async def toggle_panel(event):
@@ -35,7 +36,8 @@ async def toggle_panel(event):
         else:
             toggle_auto_reply = False
             pass
-        await event.reply(str(toggle_auto_reply))
+        await event.message.delete()
+        await event.respond("Toggle set "+str(toggle_auto_reply))
 
 @client.on(events.NewMessage)
 async def auto_reply(event):
